@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:system-ui,sans-serif;max-width:760px;margin:30px auto;padding:0 16px;line-height:1.6;color:#222}label{display:block;margin:8px 0}input,select{padding:6px;width:160px}.box{border:1px solid #0969da;border-radius:10px;padding:14px;background:#f0f6ff;margin:18px 0}table{border-collapse:collapse}td{padding:4px 10px;border-bottom:1px solid #eee}</style>
+<title>Etsy Profit Calculator 2026 – Fees &amp; Real Profit per Sale (Digital &amp; Physical)</title>
+<meta name="description" content="Free Etsy profit calculator with 2026 US fees: listing, 6.5% transaction and payment processing. Works for digital products. Every rate editable.">
+<link rel="canonical" href="https://nidhi-bhai.github.io/backtestcard/etsy-profit-calculator/"></head><body>
+<h1>Etsy profit calculator (2026 fees)</h1>
+<p>See what you actually keep from one Etsy sale after fees. Free, no signup, runs in your browser.</p>
+<label>Item price ($) <input id="p" type="number" value="25" step="0.01"></label>
+<label>Shipping charged to buyer ($) <input id="sc" type="number" value="0" step="0.01"></label>
+<label>Your item cost / materials ($) <input id="c" type="number" value="5" step="0.01"></label>
+<label>Your actual shipping cost ($) <input id="sh" type="number" value="0" step="0.01"></label>
+<label><input id="dg" type="checkbox" style="width:auto"> Digital product (no shipping, no materials)</label>
+<details><summary>Edit fee rates (defaults: US, from etsy.com/legal/fees)</summary>
+<label>Listing fee ($) <input id="lf" type="number" value="0.20" step="0.01"></label>
+<label>Transaction fee (% of price + shipping) <input id="tf" type="number" value="6.5" step="0.1"></label>
+<label>Payment processing (%) <input id="pp" type="number" value="3" step="0.1"></label>
+<label>Payment processing fixed ($) <input id="pf" type="number" value="0.25" step="0.01"></label>
+</details>
+<table id="out"></table>
+<div class="box"><b>Selling more than a few items a month?</b> The <a href="https://nidhiverse1.gumroad.com/l/igcqe">Etsy Profit Tracker spreadsheet</a> (Google Sheets &amp; Excel, $30 one-time) logs every order, fee, refund and tax set-aside automatically, with break-even pricing per product.</div>
+<h2>Etsy profit calculator for digital products</h2>
+<p>Tick "Digital product". Shipping and materials go to zero, so your costs are the listing fee, the 6.5% transaction fee and payment processing. One digital listing can sell many times; the listing fee is charged again on each sale (auto-renew).</p>
+<h2>How the math works</h2>
+<p>Revenue = price + shipping charged. Fees = listing fee + transaction % × revenue + processing % × revenue + processing fixed. Profit = revenue − fees − item cost − shipping cost. Break-even price is the price where profit is 0.</p>
+<h2>FAQ</h2>
+<p><b>Are these fees right for my country?</b> Defaults are US rates. Payment processing differs by country, so check etsy.com/legal/fees and edit the rates above. Offsite Ads (12–15%) are not included.</p>
+<p><small>Independent tool, not affiliated with or endorsed by Etsy. Etsy is a trademark of Etsy, Inc. Verify current fees before pricing.</small></p>
+<script>
+const g=i=>+document.getElementById(i).value||0,f=n=>'$'+n.toFixed(2);
+function calc(){const dg=document.getElementById('dg').checked;['sc','c','sh'].forEach(i=>document.getElementById(i).disabled=dg);
+const p=g('p'),sc=dg?0:g('sc'),c=dg?0:g('c'),sh=dg?0:g('sh'),lf=g('lf'),tf=g('tf')/100,pp=g('pp')/100,pf=g('pf'),rev=p+sc;
+const fees=lf+tf*rev+pp*rev+pf,prof=rev-fees-c-sh,be=(lf+pf+c+sh-sc*(1-tf-pp))/(1-tf-pp);
+document.getElementById('out').innerHTML=[['Revenue',f(rev)],['Etsy fees',f(fees)],['Net profit',f(prof)],['Margin',rev?(100*prof/rev).toFixed(1)+'%':'–'],['Break-even price',f(Math.max(be,0))]].map(r=>'<tr><td>'+r[0]+'</td><td><b>'+r[1]+'</b></td></tr>').join('')}
+document.querySelectorAll('input').forEach(e=>e.oninput=calc);calc();
+</script></body></html>
