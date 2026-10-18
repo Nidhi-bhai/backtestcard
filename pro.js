@@ -2,7 +2,7 @@
    Honest note: a client-side check can be bypassed by a determined user; it exists to make paying easy, not to be DRM. */
 (function (root, f) { if (typeof module === "object" && module.exports) module.exports = f(); else root.BTPro = f(); })(this, function () {
   "use strict";
-  const GUMROAD_PRODUCT_ID = "REPLACE_WITH_GUMROAD_PRODUCT_ID";   // set after the Gumroad product exists
+  const GUMROAD_PRODUCT_ID = "rI9mFvmh86mXJ_9jaS41AA==";   // set after the Gumroad product exists
   const BUY_URL = "https://nidhiverse1.gumroad.com/l/backtestcard-pro"; // update to the real permalink
   const KEY = "btc_pro_v1", RECHECK_MS = 7 * 864e5;
   const FREE_CSV_LIMIT = 1;
