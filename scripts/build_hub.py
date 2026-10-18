@@ -1,5 +1,5 @@
 import json,os,html,shutil
-R=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),'hub'); BASE='https://Nidhi-bhai.github.io/backtestcard/hub'
+R=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),'hub'); BASE='https://nidhi-bhai.github.io/backtestcard/hub'
 shutil.rmtree(R,ignore_errors=True)
 S=json.load(open(os.path.join(os.path.dirname(R),'data','series.json')))['series']
 cpi=S['US_CPI']; fx=S['INRUSD']; END='2026-09'
@@ -65,14 +65,14 @@ urls+=['','sources.html']
 # embed
 os.makedirs(f'{R}/embed',exist_ok=True)
 open(f'{R}/embed/widget.html','w').write('''<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><style>body{font:15px system-ui;margin:0;padding:12px;background:#fff;color:#111}select,input{font:inherit;padding:4px}#o{font-size:1.6rem;font-weight:700;margin:.5rem 0}a{color:#0969da}</style>
-<div><select id=c><option value=us>$ US</option><option value=in>₹ India</option></select> <input id=a type=number value=100 style="width:7em"> in <select id=f></select> → <select id=t></select></div><div id=o>…</div><small>Source: BLS / World Bank (CC BY 4.0) · <a id=l target=_blank href="https://Nidhi-bhai.github.io/backtestcard/hub/">Inflation calculator by BacktestCard</a></small>
+<div><select id=c><option value=us>$ US</option><option value=in>₹ India</option></select> <input id=a type=number value=100 style="width:7em"> in <select id=f></select> → <select id=t></select></div><div id=o>…</div><small>Source: BLS / World Bank (CC BY 4.0) · <a id=l target=_blank href="https://nidhi-bhai.github.io/backtestcard/hub/">Inflation calculator by BacktestCard</a></small>
 <script>let D;const $=i=>document.getElementById(i);const q=new URLSearchParams(location.search);
 fetch('../data/inflation.json').then(r=>r.json()).then(j=>{D=j;$('c').value=q.get('c')||'us';fill();});
 function fill(){const k=$('c').value,y=Object.keys(D[k]);for(const s of['f','t']){$(s).innerHTML=y.map(v=>`<option>${v}</option>`).join('')}$('f').value=q.get('from')||y[0];$('t').value=y[y.length-1];calc()}
-function calc(){const k=$('c').value,s=k=='us'?'$':'₹',a=+$('a').value,f=$('f').value,t=$('t').value,v=a*D[k][t]/D[k][f];$('o').textContent=`${s}${a.toLocaleString()} (${f}) = ${s}${v.toLocaleString(undefined,{maximumFractionDigits:2})} (${t})`;$('l').href=`https://Nidhi-bhai.github.io/backtestcard/hub/${k=='us'?'us':'india'}-inflation/${Math.min(f,t)}-to-${Math.max(f,t)}/`}
+function calc(){const k=$('c').value,s=k=='us'?'$':'₹',a=+$('a').value,f=$('f').value,t=$('t').value,v=a*D[k][t]/D[k][f];$('o').textContent=`${s}${a.toLocaleString()} (${f}) = ${s}${v.toLocaleString(undefined,{maximumFractionDigits:2})} (${t})`;$('l').href=`https://nidhi-bhai.github.io/backtestcard/hub/${k=='us'?'us':'india'}-inflation/${Math.min(f,t)}-to-${Math.max(f,t)}/`}
 $('c').onchange=fill;for(const i of['a','f','t'])$(i).oninput=calc;</script>''')
-snip='<iframe src="https://Nidhi-bhai.github.io/backtestcard/hub/embed/widget.html" width="100%" height="150" style="border:1px solid #ddd;border-radius:8px" title="Inflation calculator" loading="lazy"></iframe>'
-page('embed/','Free inflation calculator widget for your website','Copy-paste embed, no signup, no tracking.',f'<h1>Embed a free inflation calculator</h1><p>No signup, no cookies, no tracking. US (1947–2026) and India (1960–2025). Paste this into any blog or site:</p><textarea rows=4 style="width:100%" readonly>{html.escape(snip)}</textarea><p>Options: add <code>?c=in</code> for rupees, <code>&from=1990</code> for a start year.</p><h2>Preview</h2>{snip.replace("https://Nidhi-bhai.github.io/backtestcard/hub/embed/","")}')
+snip='<iframe src="https://nidhi-bhai.github.io/backtestcard/hub/embed/widget.html" width="100%" height="150" style="border:1px solid #ddd;border-radius:8px" title="Inflation calculator" loading="lazy"></iframe>'
+page('embed/','Free inflation calculator widget for your website','Copy-paste embed, no signup, no tracking.',f'<h1>Embed a free inflation calculator</h1><p>No signup, no cookies, no tracking. US (1947–2026) and India (1960–2025). Paste this into any blog or site:</p><textarea rows=4 style="width:100%" readonly>{html.escape(snip)}</textarea><p>Options: add <code>?c=in</code> for rupees, <code>&from=1990</code> for a start year.</p><h2>Preview</h2>{snip.replace("https://nidhi-bhai.github.io/backtestcard/hub/embed/","")}')
 urls.append('embed/')
 open(f'{R}/sitemap.xml','w').write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f'<url><loc>{BASE}/{u}</loc></url>' for u in urls)+'</urlset>')
 print(len(urls))
