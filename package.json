@@ -1,0 +1,2 @@
+{ "name": "backtestcard", "version": "0.1.0", "private": true, "license": "MIT",
+  "scripts": { "test": "node tests/unit.test.js && python3 tests/test_independent.py", "data": "python3 scripts/build_data.py", "serve": "python3 -m http.server 8000" } }

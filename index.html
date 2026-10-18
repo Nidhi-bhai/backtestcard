@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BacktestCard: see how your India + US portfolio held up in real crashes, in dollars</title>
+<meta name="description" content="Free, open-source portfolio stress tester for Indian investors who think in USD. Replay 2008, 2020 and 2022 on real public data, with the rupee's effect included. Runs in your browser. Educational only.">
+<meta property="og:title" content="BacktestCard: your portfolio vs. real crashes, in USD or INR">
+<meta property="og:description" content="Replay 2008, 2020 and 2022 on real public data, with the rupee's effect included. Free and open source.">
+<meta property="og:image" content="og.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+</head><body>
+<header class="hero">
+  <h1>Your India + US portfolio, replayed through real crashes.<br>In dollars, rupee moves included.</h1>
+  <p class="sub">Most backtesters ignore the rupee. Measured in INR, India stocks returned 10.8% a year from 2000 to 2026 (price only). Measured in USD, that drops to 7.6%. The rupee's fall accounts for the gap. See what 2008, 2020 and 2022 would have done to <em>your</em> mix, then share it as a card.</p>
+  <div class="pills"><span class="pill">Free and open source (MIT)</span><span class="pill">Runs in your browser; nothing is uploaded</span><span class="pill">Real public data, sources cited</span><span class="pill">No sign-up</span></div>
+  <a class="cta" href="#tool">Stress-test a portfolio ↓</a>
+</header>
+<div class="wrap" id="tool">
+  <div class="disclaimer"><b>Educational tool, not investment advice.</b> It shows how past data behaved and does not predict the future. It gives no recommendations, tips or signals, and it is not a SEBI-registered investment adviser or research analyst service. Equity data are monthly-average <b>price</b> indices with no dividends, and bond returns are modelled from yields. <a href="#method">Read the method and its limits.</a></div>
+  <div class="grid">
+    <div class="panel">
+      <h2>1. Your mix</h2>
+      <div id="weights"></div>
+      <div class="row"><label>Total</label><span class="weightsum" id="wsum">0%</span></div>
+      <p class="small">Weights are rescaled to 100%.</p>
+      <h2>2. Your own data (optional)</h2>
+      <p class="small">Upload a CSV of dates and prices, such as a NIFTY 50 TRI history you downloaded yourself or your fund's NAV. It is read only in your browser and is never uploaded or put in share links.</p>
+      <div class="row"><input type="text" id="cname" placeholder="Name, e.g. NIFTY 50 TRI" style="flex:1"><select id="ccur"><option>INR</option><option>USD</option></select></div>
+      <div class="row"><input type="file" id="cfile" accept=".csv,.txt"></div>
+      <div id="cmsg" class="small"></div>
+      <h2>3. Settings</h2>
+      <div class="row"><label>Measure in</label><select id="base"><option value="USD">USD</option><option value="INR">INR</option></select></div>
+      <div class="row"><label>From</label><input type="month" id="start" value="2000-01"></div>
+      <div class="row"><label>To</label><input type="month" id="end"></div>
+      <div class="row"><label>Rebalance</label><select id="reb"><option value="A">Yearly</option><option value="M">Monthly</option><option value="N">Never</option></select></div>
+      <div class="row"><label>Annual cost, %</label><input type="number" id="fee" min="0" max="5" step="0.05" value="0"></div>
+      <div class="row"><label>Inflation-adjusted (US CPI, USD only)</label><input type="checkbox" id="real"></div>
+      <button class="primary" id="run" style="width:100%;margin-top:8px">Run stress test</button>
+    </div>
+    <div>
+      <div class="panel">
+        <div id="err" class="err"></div>
+        <div class="summary" id="summary"></div>
+        <div class="tiles" id="tiles"></div>
+        <h2 style="margin-top:14px">Growth of 1 <span id="curl"></span></h2>
+        <canvas class="chart" id="cg"></canvas>
+        <h2>Drawdown from previous peak</h2>
+        <canvas class="chart" id="cd" style="height:160px"></canvas>
+        <h2>Crisis replays</h2>
+        <table id="crises"><thead><tr><th>Event</th><th>Window</th><th>Return</th><th>Worst fall</th><th>Months to recover</th></tr></thead><tbody></tbody></table>
+        <div class="actions">
+          <button id="share">Copy share link</button><button id="png">Download share card (PNG)</button><button id="embed">Copy embed code</button>
+        </div>
+        <div id="amsg" class="small"></div>
+      </div>
+      <div class="panel" id="propanel" style="margin-top:14px" hidden>
+        <h2>BacktestCard Pro (planned)</h2>
+        <p>The free tool stays free. Pro is a one-time Gumroad purchase for people who want more:</p>
+        <ul class="small" style="font-size:14px;color:var(--ink)"><li>Monthly SIP and contribution modelling</li><li>Rolling-period and "every start date" views</li><li>Unlimited custom CSV series and a saved-portfolio library</li><li>PDF report export and embeds without the badge</li></ul>
+        <p class="small">These features aren't built yet. If you buy early, you get them as they ship and help fund the free tool. If that isn't for you, the free version does everything above.</p>
+        <a class="cta" id="pro" href="https://nidhiverse1.gumroad.com/l/backtestcard-pro" target="_blank" rel="noopener">See Pro on Gumroad</a>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="copy" id="why">
+  <h2>Why this exists</h2>
+  <p>If you earn, spend or plan in dollars, or you just want to compare honestly, an Indian portfolio has two risks: the market and the rupee. US backtesters ignore the rupee. Indian tools usually ignore the dollar. BacktestCard puts both on one screen, using data you can check yourself.</p>
+  <h2>What you get</h2>
+  <ul><li><b>Crisis replays</b> of the dot-com bust, 2008, the 2013 taper tantrum, the 2020 COVID crash and the 2022 rate shock: how far your mix fell and how long it took to recover.</li>
+  <li><b>USD or INR</b> results, with currency conversion applied consistently to every asset.</li>
+  <li><b>Share cards</b>: a PNG plus a link that reopens the exact same test.</li>
+  <li><b>Embeds</b> for blogs and newsletters: one iframe, free.</li>
+  <li><b>Bring your own data</b>: upload a NIFTY TRI, a mutual-fund NAV or anything else as CSV, and it is converted for you.</li></ul>
+  <h2 id="method">Method and honest limits</h2>
+  <dl class="faq">
+  <dt>Where does the data come from?</dt><dd>US Federal Reserve (H.10 rupee rate, H.15 Treasury yields), US BLS (CPI), the OECD (India and US share price indices, India interest rates) and the World Bank Pink Sheet (gold). All are fetched from the original publishers under terms that allow reuse with attribution. See <a href="DATA_SOURCES.md">DATA_SOURCES.md</a>.</dd>
+  <dt>Why not NIFTY 50 or the S&amp;P 500 directly?</dt><dd>Their index data is licensed and can't be redistributed for free. The OECD's national share price indices track the broad market instead. If you have the right to use an index file, upload it, and it stays on your device.</dd>
+  <dt>What's missing?</dt><dd>Dividends: equity series are price-only, which understates stock returns by roughly 1–2% a year. Taxes. Intra-month moves: monthly averages make crashes look shallower than the daily lows. Bond returns are modelled from 10-year yields, not taken from a real fund. India bond and cash data start in Dec 2011.</dd>
+  <dt>Is this advice?</dt><dd>No. It's an educational calculator of past data. It doesn't rank portfolios or tell you what to buy.</dd>
+  <dt>Is my data private?</dt><dd>Yes. There's no account, no tracking script and no server; everything runs in your browser.</dd></dl>
+</section>
+<footer><div class="wrap">
+  <p><b>Educational tool, not investment advice.</b> Past performance does not guarantee future results. BacktestCard is not registered with SEBI and gives no recommendations.</p>
+  <p class="long">Data: Board of Governors of the Federal Reserve System (H.10, H.15); U.S. Bureau of Labor Statistics (CPI-U); OECD (2026), Financial market indicators, OECD Data Explorer; World Bank Commodity Price Data (The Pink Sheet), CC BY 4.0. No data are sourced from FRED, Yahoo, Stooq or NSE. Code: MIT licence, <a href="https://github.com/Nidhi-bhai/backtestcard" id="repo">source on GitHub</a>.</p>
+  <p class="small" id="built"></p>
+</div></footer>
+<a class="badge" id="badge" href="./" target="_blank" rel="noopener" style="display:none">Made with BacktestCard ↗</a>
+<script src="engine.js"></script><script src="app.js"></script>
+</body></html>

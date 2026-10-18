@@ -1,0 +1,33 @@
+name: test-and-deploy
+on:
+  push: { branches: [main] }
+  workflow_dispatch:
+  schedule: [{ cron: "0 3 5 * *" }]   # monthly: refresh data from primary sources
+permissions: { contents: write, pages: write, id-token: write }
+concurrency: { group: pages, cancel-in-progress: true }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: pip install pandas openpyxl numpy
+      - if: github.event_name == 'schedule'
+        run: |
+          python3 scripts/build_data.py
+          git config user.name "data-bot"; git config user.email "data-bot@users.noreply.github.com"
+          git add data/series.json && git commit -m "data: monthly refresh" || true
+          git push || true
+      - run: node tests/unit.test.js && python3 tests/test_independent.py
+      - run: mkdir _site && cp -r index.html app.js engine.js style.css og.png DATA_SOURCES.md data .nojekyll _site/
+      - uses: actions/upload-pages-artifact@v3
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
+    steps:
+      - id: d
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,9 @@
+[
+ {"weights":{"us_eq":60,"us_bond":40},"base":"USD","start":"2000-01","rebalance":"A"},
+ {"weights":{"in_eq":100},"base":"USD","start":"2000-01","rebalance":"N"},
+ {"weights":{"in_eq":100},"base":"INR","start":"2000-01","rebalance":"N"},
+ {"weights":{"us_eq":40,"in_eq":40,"gold":20},"base":"USD","start":"1995-01","rebalance":"M","feePct":0.3},
+ {"weights":{"in_eq":50,"in_bond":30,"in_cash":20},"base":"INR","rebalance":"A"},
+ {"weights":{"us_eq":70,"gold":30},"base":"USD","start":"1980-01","rebalance":"A","real":true},
+ {"weights":{"us_cash":100},"base":"INR","start":"1990-01","rebalance":"N"}
+]
