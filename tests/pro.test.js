@@ -1,6 +1,6 @@
 // node tests/pro.test.js  (licence logic with a mocked Gumroad API + PDF writer validity)
 const assert = require("assert"), fs = require("fs"), path = require("path"), cp = require("child_process");
-const src = fs.readFileSync(path.join(__dirname, "../pro.js"), "utf8").replace('"REPLACE_WITH_GUMROAD_PRODUCT_ID"', '"TESTPID=="');
+const src = fs.readFileSync(path.join(__dirname, "../pro.js"), "utf8").replace(/GUMROAD_PRODUCT_ID = "[^"]*"/, 'GUMROAD_PRODUCT_ID = "TESTPID=="');
 const m = { exports: {} }; new Function("module", "exports", src)(m, m.exports); const P = m.exports;
 const Store = () => { const d = {}; return { getItem: k => (k in d ? d[k] : null), setItem: (k, v) => (d[k] = String(v)), removeItem: k => delete d[k] }; };
 const fake = body => async (url, opt) => { assert.strictEqual(url, "https://api.gumroad.com/v2/licenses/verify");
