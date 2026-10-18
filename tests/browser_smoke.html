@@ -1,0 +1,10 @@
+<!doctype html><!-- Open via a local server: /tests/browser_smoke.html. Sets a fake Pro record (no network), loads the app, writes results into #out. -->
+<pre id="out">running</pre><iframe id="f" style="width:1200px;height:900px"></iframe>
+<script>
+localStorage.setItem("btc_pro_v1", JSON.stringify({ key: "SMOKETEST1234", at: Date.now() }));
+const f = document.getElementById("f"); f.src = "../index.html";
+f.onload = () => setTimeout(() => { const w = f.contentWindow, o = document.getElementById("out");
+  try { const b = w.__bt.reportBytes(); let s = ""; for (const x of b) s += String.fromCharCode(x);
+    o.textContent = "PRO=" + w.__bt.isPro() + " PDFLEN=" + b.length + " B64=" + btoa(s); } catch (e) { o.textContent = "ERR " + e; }
+  localStorage.removeItem("btc_pro_v1"); }, 2500);
+</script>

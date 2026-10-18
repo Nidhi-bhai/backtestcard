@@ -15,6 +15,9 @@
 - **Share**: the URL hash holds the full state (`#p=us_eq:60,in_eq:40&s=2000-01&c=USD&r=A`), a 1200×630 PNG card, and an `?embed=1` iframe mode with a "Made with BacktestCard" badge.
 - No backend, no tracking, no dependencies. Static files only.
 
+## BacktestCard Pro ($9 one-time, Gumroad)
+Pro is unlocked by a Gumroad licence key, verified in the browser (`pro.js` → `api.gumroad.com/v2/licenses/verify`) and re-checked weekly. It adds unlimited CSVs (free: 1), a PDF report (`pdf.js`, dependency-free), share cards without the badge, and saved portfolios (localStorage). Set `GUMROAD_PRODUCT_ID` in `pro.js` once the product exists. Until then, Unlock refuses every key. Because the check runs client-side, it can be bypassed; it's there to make paying easy, not as DRM.
+
 ## Run locally
 ```
 python3 -m http.server 8000   # then open http://localhost:8000
@@ -30,6 +33,7 @@ Needs Python 3.10+, pandas and openpyxl. Sources and licences: [DATA_SOURCES.md]
 ## Tests
 ```
 node tests/unit.test.js            # 13 unit tests: bond maths, FX, CSV, URL sanitising, no-lookahead
+node tests/pro.test.js             # 7 tests: licence logic (mocked Gumroad), PDF validity
 python3 tests/test_independent.py  # separate pandas implementation, all stats must match to 1e-9
 ```
 

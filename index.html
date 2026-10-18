@@ -7,7 +7,7 @@
 <meta property="og:title" content="BacktestCard: your portfolio vs. real crashes, in USD or INR">
 <meta property="og:description" content="Replay 2008, 2020 and 2022 on real public data, with the rupee's effect included. Free and open source.">
 <meta property="og:image" content="og.png"><meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head><body>
 <header class="hero">
   <h1>Your India + US portfolio, replayed through real crashes.<br>In dollars, rupee moves included.</h1>
@@ -49,17 +49,25 @@
         <h2>Crisis replays</h2>
         <table id="crises"><thead><tr><th>Event</th><th>Window</th><th>Return</th><th>Worst fall</th><th>Months to recover</th></tr></thead><tbody></tbody></table>
         <div class="actions">
-          <button id="share">Copy share link</button><button id="png">Download share card (PNG)</button><button id="embed">Copy embed code</button>
+          <button id="share">Copy share link</button><button id="png">Download share card (PNG)</button><button id="embed">Copy embed code</button><button id="pdf">PDF report (Pro)</button>
         </div>
         <div id="amsg" class="small"></div>
+        <p class="small" id="crisiscta">See how your portfolio survived 2008, crisis by crisis, in a PDF you can keep. <a href="#propanel">Pro, $9 one-time →</a></p>
       </div>
-      <div class="panel" id="propanel" style="margin-top:14px" hidden>
-        <h2>BacktestCard Pro (planned)</h2>
-        <p>The free tool stays free. Pro is a one-time Gumroad purchase for people who want more:</p>
-        <ul class="small" style="font-size:14px;color:var(--ink)"><li>Monthly SIP and contribution modelling</li><li>Rolling-period and "every start date" views</li><li>Unlimited custom CSV series and a saved-portfolio library</li><li>PDF report export and embeds without the badge</li></ul>
-        <p class="small">These features aren't built yet. If you buy early, you get them as they ship and help fund the free tool. If that isn't for you, the free version does everything above.</p>
-        <a class="cta" id="pro" href="https://nidhiverse1.gumroad.com/l/backtestcard-pro" target="_blank" rel="noopener">See Pro on Gumroad</a>
+      <div class="panel" id="propanel" style="margin-top:14px">
+        <h2>BacktestCard Pro, $9 one-time</h2>
+        <p id="prostate">Everything above stays free. Pro adds the tools you need when you take this seriously:</p>
+        <ul style="font-size:14px"><li><b>PDF report</b> of your backtest and every crisis replay, to keep or share with family</li><li><b>Unlimited CSV uploads</b> (free: 1). Mix your NIFTY TRI, fund NAVs and more</li><li><b>Clean share cards</b> without the "Made with" badge</li><li><b>Saved portfolios</b>, kept privately in this browser</li></ul>
+        <p class="small">One payment, no subscription. Gumroad handles checkout in USD. Lifetime updates to Pro features. Educational tool only: Pro adds no tips, signals or recommendations.</p>
+        <div id="probuy"><a class="cta" id="pro" href="#" target="_blank" rel="noopener">Get Pro, $9 one-time</a>
+        <div class="row" style="margin-top:12px"><input id="prokey" placeholder="Already bought? Paste your licence key" style="flex:1"><button id="proact">Unlock</button></div></div>
+        <div id="promsg" class="small"></div>
       </div>
+      <div class="panel" style="margin-top:14px">
+        <h2>Saved portfolios <span class="small">(Pro)</span></h2>
+        <div class="row"><input id="savename" placeholder="Name this portfolio" style="flex:1"><button id="savebtn">Save</button></div>
+        <div id="savedlist" class="small"></div>
+      </div></div>
     </div>
   </div>
 </div>
@@ -82,9 +90,9 @@
 </section>
 <footer><div class="wrap">
   <p><b>Educational tool, not investment advice.</b> Past performance does not guarantee future results. BacktestCard is not registered with SEBI and gives no recommendations.</p>
-  <p class="long">Data: Board of Governors of the Federal Reserve System (H.10, H.15); U.S. Bureau of Labor Statistics (CPI-U); OECD (2026), Financial market indicators, OECD Data Explorer; World Bank Commodity Price Data (The Pink Sheet), CC BY 4.0. No data are sourced from FRED, Yahoo, Stooq or NSE. Code: MIT licence, <a href="https://github.com/Nidhi-bhai/backtestcard" id="repo">source on GitHub</a>.</p>
+  <p class="long">Data: Board of Governors of the Federal Reserve System (H.10, H.15); U.S. Bureau of Labor Statistics (CPI-U); OECD (2026), Financial market indicators, OECD Data Explorer; World Bank Commodity Price Data (The Pink Sheet), CC BY 4.0. No data are sourced from FRED, Yahoo, Stooq or NSE. <a href="hub/">Inflation calculators</a> · Code: MIT licence, <a href="https://github.com/Nidhi-bhai/backtestcard" id="repo">source on GitHub</a>.</p>
   <p class="small" id="built"></p>
 </div></footer>
 <a class="badge" id="badge" href="./" target="_blank" rel="noopener" style="display:none">Made with BacktestCard ↗</a>
-<script src="engine.js"></script><script src="app.js"></script>
+<script src="engine.js?v=2"></script><script src="pro.js?v=2"></script><script src="pdf.js?v=2"></script><script src="app.js?v=2"></script>
 </body></html>

@@ -5,7 +5,16 @@
   const params = new URLSearchParams(location.search), EMBED = params.get("embed") === "1";
   if (EMBED) { document.body.classList.add("embed"); $("badge").style.display = "block"; }
   const DEFAULT = { weights: { us_eq: 40, in_eq: 40, gold: 10, us_bond: 10 }, start: "2000-01", base: "USD", rebalance: "A", feePct: 0, real: false };
-  let DATA = null, custom = {}, last = null;
+  let DATA = null, custom = {}, last = null, PRO = false;
+  const P = window.BTPro;
+  function setPro(on) {
+    PRO = on;
+    $("prostate").textContent = on ? "Pro is active in this browser. Thank you for supporting the free tool." : $("prostate").textContent;
+    $("probuy").style.display = on ? "none" : ""; $("crisiscta").style.display = on ? "none" : "";
+    $("pdf").textContent = on ? "Download PDF report" : "PDF report (Pro)";
+    renderSaved();
+  }
+  function needPro(what) { $("amsg").innerHTML = `${what} is a Pro feature. <a href="#propanel">Get Pro, $9 one-time</a>`; document.getElementById("propanel").scrollIntoView({ behavior: "smooth" }); }
   const pct = (x, d = 1) => x == null ? "–" : (x * 100).toFixed(d) + "%";
   const cls = x => x < 0 ? "neg" : "pos";
 
@@ -84,7 +93,8 @@
     g.font = "24px system-ui"; let y = 430;
     for (const r of last.crises.slice(0, 4)) { g.fillStyle = "#e8ecf8"; g.fillText(r.name, 60, y); g.fillStyle = "#fb7185"; g.fillText(pct(r.maxDD), 520, y);
       g.fillStyle = "#9aa6c7"; g.fillText(r.monthsToRecover == null ? "not recovered yet" : `recovered in ${r.monthsToRecover} mo`, 680, y); y += 38; }
-    g.fillStyle = "#fbbf24"; g.font = "18px system-ui"; g.fillText("Educational, past data, not advice. Price indices without dividends. Data: Fed, BLS, OECD, World Bank.", 60, H - 30);
+    g.fillStyle = "#fbbf24"; g.font = "18px system-ui"; g.fillText("Educational, past data, not advice. Price indices without dividends.", 60, H - 50); g.fillText("Data: Fed, BLS, OECD, World Bank.", 60, H - 26);
+    if (!PRO) { g.fillStyle = "#121a33"; g.fillRect(W - 330, H - 74, 290, 44); g.fillStyle = "#5eead4"; g.font = "bold 18px system-ui"; g.textAlign = "right"; g.fillText("Made with BacktestCard", W - 58, H - 45); g.textAlign = "left"; }
     g.fillStyle = "#5eead4"; g.font = "bold 20px system-ui"; g.textAlign = "right"; g.fillText(location.host + location.pathname.replace(/index.html$/, ""), W - 60, 80); g.textAlign = "left";
     return c;
   }
@@ -95,6 +105,7 @@
 
   async function onFile(ev) {
     const f = ev.target.files[0]; if (!f) return;
+    if (!PRO && Object.keys(custom).length >= P.FREE_CSV_LIMIT) { $("cmsg").innerHTML = `The free version handles ${P.FREE_CSV_LIMIT} CSV file. <a href="#propanel">Pro</a> lets you upload as many as you like.`; ev.target.value = ""; return; }
     if (f.size > 5e6) { $("cmsg").textContent = "File is over 5 MB."; return; }
     try {
       const p = E.parseCSV(await f.text()), id = "custom" + (Object.keys(custom).length + 1);
@@ -105,6 +116,56 @@
     } catch (e) { $("cmsg").textContent = "Could not read file: " + e.message; }
   }
 
+  function b64bytes(dataURL) { const b = atob(dataURL.split(",")[1]), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+  function reportBytes() {
+    const s = last.stats, T = [], L = (text, y, o) => T.push(Object.assign({ text, x: 50, y }, o || {}));
+    const mix = last.ids.map((id, i) => Math.round(last.weights[i] * 100) + "% " + (E.ASSETS[id] ? E.ASSETS[id].label : custom[id].name + " (your CSV)"));
+    L("BacktestCard report", 60, { size: 22, bold: true }); L("Historical stress test. Educational only, not investment advice.", 80, { size: 10, color: [0.6, 0.35, 0] });
+    L(`Generated ${new Date().toISOString().slice(0, 10)} - ${last.dates[0]} to ${last.dates.at(-1)} - measured in ${last.base}${last.real ? " (real, after US CPI)" : ""} - rebalance ${({ A: "yearly", M: "monthly", N: "never" })[last.opts.rebalance]} - annual cost ${last.opts.feePct || 0}%`, 100, { size: 9 });
+    L("Portfolio", 128, { size: 13, bold: true }); mix.forEach((m, i) => L(m, 146 + i * 14));
+    let y = 156 + mix.length * 14; L("Results", y, { size: 13, bold: true }); y += 18;
+    [["Growth of 1 " + last.base, last.values.at(-1).toFixed(2)], ["Annual growth (CAGR)", pct(s.cagr, 2)], ["Worst fall (max drawdown)", pct(s.maxDD)], ["Worst 12 months", pct(s.worst12m)],
+     ["Worst month", pct(s.worstMonth)], ["Volatility (annual)", pct(s.vol)], ["Sharpe vs US T-bills", s.sharpe == null ? "-" : s.sharpe.toFixed(2)], ["Longest time below a previous peak", s.longestUnderwaterMonths + " months"], ["Months tested", String(s.months)]]
+      .forEach(([k, v]) => { L(k, y); L(v, y, { x: 300, bold: true }); y += 14; });
+    y += 10; L("Crisis replays", y, { size: 13, bold: true }); y += 18;
+    L("Event", y, { bold: true }); L("Window", y, { x: 210, bold: true }); L("Return", y, { x: 330, bold: true }); L("Worst fall", y, { x: 400, bold: true }); L("Recovered in", y, { x: 480, bold: true }); y += 14;
+    for (const c of E.CRISES) { const r = last.crises.find(x => x.id === c.id); L(c.name, y); L(c.start + " to " + c.end, y, { x: 210 });
+      if (r) { L(pct(r.ret), y, { x: 330 }); L(pct(r.maxDD), y, { x: 400 }); L(r.monthsToRecover == null ? "not yet" : r.monthsToRecover + " mo", y, { x: 480 }); } else L("outside data range", y, { x: 330 }); y += 14; }
+    const cv = card(), img = { jpeg: b64bytes(cv.toDataURL("image/jpeg", 0.9)), w: cv.width, h: cv.height, x: 50, y: y + 16, dw: 495, dh: 260 };
+    y += 290;
+    const notes = ["Method and limits: monthly data. Equity series are price indices without dividends (roughly 1-2%/yr below total return).",
+      "Monthly averages understate intra-month falls. Bond and cash returns are modelled from published yields. Past results do not predict the future.",
+      "This report is an educational calculation of historical data. It is not investment advice, a recommendation, or a research report, and",
+      "BacktestCard is not a SEBI-registered investment adviser or research analyst.",
+      "Data: Federal Reserve Board (H.10, H.15); U.S. Bureau of Labor Statistics; OECD Financial market indicators; World Bank Pink Sheet (CC BY 4.0)."];
+    notes.forEach((n, i) => L(n, y + i * 12, { size: 8, color: [0.35, 0.35, 0.4] }));
+    return MiniPDF.build([{ items: T.concat([img]) }]);
+  }
+  function pdfReport() {
+    if (!PRO) return needPro("The PDF report");
+    if (!last) return;
+    const bytes = reportBytes();
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" })); a.download = "backtestcard-report.pdf"; a.click();
+  }
+  const SKEY = "btc_saved_v1";
+  const getSaved = () => { try { return JSON.parse(localStorage.getItem(SKEY)) || []; } catch { return []; } };
+  function renderSaved() {
+    const box = $("savedlist"); box.innerHTML = "";
+    if (!PRO) { box.innerHTML = 'Save portfolios to come back to them later. <a href="#propanel">Pro</a>'; return; }
+    const list = getSaved(); if (!list.length) { box.textContent = "Nothing saved yet."; return; }
+    list.forEach((it, i) => { const row = document.createElement("div"); row.className = "row";
+      const a = document.createElement("a"); a.href = "#" + it.state; a.textContent = it.name; a.style.flex = "1";
+      const del = document.createElement("button"); del.textContent = "Delete"; del.onclick = () => { const l = getSaved(); l.splice(i, 1); localStorage.setItem(SKEY, JSON.stringify(l)); renderSaved(); };
+      row.append(a, del); box.append(row); });
+  }
+  $("savebtn").onclick = () => { if (!PRO) return needPro("Saved portfolios");
+    const name = ($("savename").value || "Portfolio " + (getSaved().length + 1)).slice(0, 60), l = getSaved();
+    l.unshift({ name, state: E.encodeState(readOpts()) }); localStorage.setItem(SKEY, JSON.stringify(l.slice(0, 200))); $("savename").value = ""; renderSaved(); };
+  $("pdf").onclick = pdfReport;
+  $("pro").href = P.BUY_URL;
+  $("proact").onclick = async () => { $("promsg").textContent = "Checking with Gumroad…"; const r = await P.activate($("prokey").value);
+    $("promsg").textContent = r.ok ? "Unlocked. Enjoy Pro." : r.error; if (r.ok) { setPro(true); if (last) run(); } };
+  P.status().then(setPro).catch(() => setPro(false));
   $("run").onclick = run; $("cfile").onchange = onFile;
   $("share").onclick = () => copy(shareURL(), Object.keys(custom).length ? "Link copied. Your uploaded CSV is not included in links." : "Link copied. It reopens this exact test.");
   $("embed").onclick = () => copy(`<iframe src="${location.origin + location.pathname}?embed=1#${E.encodeState(readOpts())}" width="100%" height="900" style="border:0;max-width:760px" loading="lazy" title="BacktestCard portfolio stress test"></iframe>`, "Embed code copied.");
@@ -117,5 +178,5 @@
     applyOpts(st && Object.keys(st.weights).length ? st : DEFAULT); run();
     if (params.get("card") === "1" && last) { const img = new Image(); img.src = card().toDataURL("image/png"); img.style.display = "block"; document.body.innerHTML = ""; document.body.style.margin = "0"; document.body.append(img); }
   }).catch(e => $("err").textContent = "Could not load data: " + e.message);
-  window.__bt = { card: () => card() };
+  window.__bt = { card: () => card(), reportBytes: () => reportBytes(), isPro: () => PRO };
 })();

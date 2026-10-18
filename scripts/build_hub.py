@@ -10,6 +10,7 @@ IN={int(r['date']):r['value'] for r in wb if r['countryiso3code']=='IND'}
 FXA={y:sum(fx[f'{y}-{m:02d}'] for m in range(1,13))/12 for y in range(1973,2026)}
 
 CSS="body{font:17px/1.6 system-ui;max-width:760px;margin:2rem auto;padding:0 1rem;background:#0d1117;color:#e6edf3}a{color:#58a6ff}.big{font-size:2.2rem;font-weight:700}table{border-collapse:collapse;margin:.5rem 0}td,th{border:1px solid #30363d;padding:3px 8px;text-align:right}small{color:#8b949e}nav{font-size:.9rem}"
+CTA='<div style="border:1px solid #0969da;border-radius:10px;padding:12px 14px;margin:18px 0;background:#f0f6ff"><b>See how your portfolio survived 2008.</b> Inflation is one risk; crashes and the rupee are the others. <a href="{root}../">Stress-test your India + US mix free</a>, or get the full crisis PDF report with <a href="{root}../#propanel">BacktestCard Pro, $9 one-time</a>. <small>Educational only.</small></div>'
 FOOT='<hr><small>Historical statistics for education only. Not investment advice. US CPI: U.S. Bureau of Labor Statistics CPI-U (public domain), annual averages; 2026 = Sep 2026 index. India CPI: World Bank WDI FP.CPI.TOTL (source IMF IFS), licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. INR/USD: Federal Reserve Board H.10. <a href="{root}sources.html">Sources & method</a> · <a href="{root}embed/">Embed this calculator</a> · <a href="{root}../">BacktestCard</a></small>'
 def page(rel,title,desc,body,faq=None,extra=None):
     depth=rel.count('/'); root='../'*depth
@@ -20,7 +21,7 @@ def page(rel,title,desc,body,faq=None,extra=None):
     fq=''.join(f'<h3>{html.escape(q)}</h3><p>{html.escape(a)}</p>' for q,a in (faq or []))
     p=f'{R}/{rel}index.html' if rel.endswith('/') or rel=='' else f'{R}/{rel}'
     os.makedirs(os.path.dirname(p),exist_ok=True)
-    open(p,'w').write(f'<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>{html.escape(title)}</title><meta name=description content="{html.escape(desc)}"><link rel=canonical href="{BASE}/{rel}">{lds}<style>{CSS}</style></head><body><nav><a href="{root}">Inflation hub</a></nav>{body}{fq}{FOOT.format(root=root)}</body></html>')
+    open(p,'w').write(f'<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>{html.escape(title)}</title><meta name=description content="{html.escape(desc)}"><link rel=canonical href="{BASE}/{rel}">{lds}<style>{CSS}</style></head><body><nav><a href="{root}">Inflation hub</a></nav>{body}{CTA.format(root=root)}{fq}{FOOT.format(root=root)}</body></html>')
 urls=[]
 def span(D,a,b,sym,lab):
     f=D[b]/D[a]; n=b-a; r=f**(1/n)-1
