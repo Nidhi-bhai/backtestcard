@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free AI Brand Audit Kit: what do ChatGPT, Gemini, Claude &amp; Perplexity say about your brand?</title>
+<meta name="description" content="Free checklist and copy-paste prompts to test how AI assistants describe, recommend and compare your brand. No signup, runs in your browser.">
+<link rel="canonical" href="https://nidhi-bhai.github.io/backtestcard/ai-brand-audit/">
+<style>body{font-family:system-ui,sans-serif;max-width:820px;margin:auto;padding:20px;line-height:1.55;color:#1b1b1b;background:#fafafa}
+input,button{font-size:16px;padding:10px;margin:4px 0;border:1px solid #bbb;border-radius:8px;width:100%;box-sizing:border-box}
+button{background:#111;color:#fff;cursor:pointer;border:0}.p{background:#fff;border:1px solid #ddd;border-radius:8px;padding:12px;margin:10px 0;white-space:pre-wrap}
+.c{font-size:13px;width:auto;padding:4px 10px;background:#444}.cta{background:#fff7e0;border:2px solid #e0a800;border-radius:10px;padding:16px;margin:24px 0}
+.cta a{display:inline-block;background:#e0a800;color:#111;font-weight:700;padding:10px 16px;border-radius:8px;text-decoration:none}small{color:#666}</style></head><body>
+<h1>What do AI assistants say about your brand?</h1>
+<p>More buyers now ask ChatGPT, Gemini, Claude or Perplexity "what's the best X?" before they Google. This free kit gives you the exact prompts and a checklist to see whether you're mentioned, how you're described, and who gets recommended instead. Nothing is sent anywhere: this page runs in your browser and makes no AI calls. You run the prompts yourself.</p>
+<form id="f"><label>Brand name<input id="b" required placeholder="e.g. Acme Notes"></label>
+<label>Category / what you sell<input id="c" required placeholder="e.g. note-taking app for students"></label>
+<label>Main competitor (optional)<input id="k" placeholder="e.g. Notion"></label>
+<button>Generate my audit kit</button></form>
+<div id="out"></div>
+<div class="cta"><h2>Want it done for you? $49</h2>
+<p>I run these prompts across ChatGPT, Gemini, Claude and Perplexity, record the raw answers, score your visibility and accuracy against your top competitors, and send a written report with a prioritized fix list. Fixed scope, delivered async in 3 business days. AI answers change over time and vary by user, so the report is a dated snapshot, not a guarantee of future rankings.</p>
+<a href="https://nidhi24.gumroad.com/">Get the $49 audit</a></div>
+<small>Independent tool. Not affiliated with OpenAI, Google, Anthropic or Perplexity.</small>
+<script>
+const P=(b,c,k)=>[
+["Awareness",`What do you know about ${b}? Describe what it is, who it's for and how it's priced.`],
+["Category recommendation (unbranded)",`What are the best ${c} options right now? List the top 5 with one line on each.`],
+["Buyer intent",`I'm looking for a ${c}. Which one should I choose and why?`],
+["Alternatives",`What are the best alternatives to ${k||"the market leader in "+c}?`],
+["Head-to-head",`Compare ${b} vs ${k||"its main competitor"}: features, pricing, pros and cons.`],
+["Reputation",`What do customers complain about with ${b}? What do they like?`],
+["Accuracy check",`Is ${b} legit? When was it founded, who makes it and where is it based?`],
+["Sources",`Which websites or reviews would you cite when recommending a ${c}?`]];
+const L=["Run every prompt in a fresh/incognito chat in each assistant (ChatGPT, Gemini, Claude, Perplexity, Copilot).","Mentioned at all in the unbranded prompts (2, 3, 4)? Note the position.","Is the description accurate: product, audience, pricing, founder, location?","Any outdated or wrong facts (old pricing, discontinued features)?","Which competitors appear instead of you, and in what order?","Sentiment: positive, neutral or negative wording?","Which sources does Perplexity/Copilot cite? Are you on them (G2, Reddit, review sites, listicles)?","Does your own site clearly state what you are, who it's for and the price in plain text?","Save screenshots with dates. Re-run monthly to track change."];
+f.onsubmit=e=>{e.preventDefault();const b=document.getElementById('b').value.trim(),c=document.getElementById('c').value.trim(),k=document.getElementById('k').value.trim();
+let h="<h2>Your copy-paste prompts</h2>";P(b,c,k).forEach(([t,p],i)=>{h+=`<div class=p><b>${i+1}. ${t}</b>\n<span id=p${i}></span>\n<button class=c onclick="navigator.clipboard.writeText(document.getElementById('p${i}').textContent);this.textContent='Copied'">Copy</button></div>`});
+h+="<h2>Checklist</h2><ul>"+L.map(x=>`<li><label><input type=checkbox style=width:auto> ${x}</label></li>`).join("")+"</ul>";
+out.innerHTML=h;P(b,c,k).forEach(([t,p],i)=>document.getElementById('p'+i).textContent=p);out.scrollIntoView({behavior:'smooth'})};
+</script></body></html>
