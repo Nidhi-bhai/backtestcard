@@ -31,4 +31,5 @@ const p=g('p'),sc=dg?0:g('sc'),c=dg?0:g('c'),sh=dg?0:g('sh'),lf=g('lf'),tf=g('tf
 const fees=lf+tf*rev+pp*rev+pf,prof=rev-fees-c-sh,be=(lf+pf+c+sh-sc*(1-tf-pp))/(1-tf-pp);
 document.getElementById('out').innerHTML=[['Revenue',f(rev)],['Etsy fees',f(fees)],['Net profit',f(prof)],['Margin',rev?(100*prof/rev).toFixed(1)+'%':'–'],['Break-even price',f(Math.max(be,0))]].map(r=>'<tr><td>'+r[0]+'</td><td><b>'+r[1]+'</b></td></tr>').join('')}
 document.querySelectorAll('input').forEach(e=>e.oninput=calc);calc();
-</script></body></html>
+</script><div class="aff" style="border:1px solid #d0d7de;border-radius:10px;padding:10px 14px;margin:14px 0"><b>Want to chart these assets yourself?</b> TradingView has free charts. <a href="https://www.tradingview.com/?aff_id=1172954" target="_blank" rel="sponsored noopener">Open TradingView</a><br><small>Affiliate link: we may earn a commission if you subscribe, at no extra cost to you. Educational only, not investment advice.</small></div>
+</body></html>

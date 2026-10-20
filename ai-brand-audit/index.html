@@ -33,4 +33,5 @@ f.onsubmit=e=>{e.preventDefault();const b=document.getElementById('b').value.tri
 let h="<h2>Your copy-paste prompts</h2>";P(b,c,k).forEach(([t,p],i)=>{h+=`<div class=p><b>${i+1}. ${t}</b>\n<span id=p${i}></span>\n<button class=c onclick="navigator.clipboard.writeText(document.getElementById('p${i}').textContent);this.textContent='Copied'">Copy</button></div>`});
 h+="<h2>Checklist</h2><ul>"+L.map(x=>`<li><label><input type=checkbox style=width:auto> ${x}</label></li>`).join("")+"</ul>";
 out.innerHTML=h;P(b,c,k).forEach(([t,p],i)=>document.getElementById('p'+i).textContent=p);out.scrollIntoView({behavior:'smooth'})};
-</script></body></html>
+</script><div class="aff" style="border:1px solid #d0d7de;border-radius:10px;padding:10px 14px;margin:14px 0"><b>Want to chart these assets yourself?</b> TradingView has free charts. <a href="https://www.tradingview.com/?aff_id=1172954" target="_blank" rel="sponsored noopener">Open TradingView</a><br><small>Affiliate link: we may earn a commission if you subscribe, at no extra cost to you. Educational only, not investment advice.</small></div>
+</body></html>
